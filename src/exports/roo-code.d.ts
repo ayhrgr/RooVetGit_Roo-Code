@@ -77,15 +77,23 @@ type GlobalSettings = {
 							}
 					  }
 					| undefined
+				gemini?:
+					| {
+							[x: string]: {
+								dimension: number
+							}
+					  }
+					| undefined
 		  }
 		| undefined
 	codebaseIndexConfig?:
 		| {
 				codebaseIndexEnabled?: boolean | undefined
 				codebaseIndexQdrantUrl?: string | undefined
-				codebaseIndexEmbedderProvider?: ("openai" | "ollama") | undefined
+				codebaseIndexEmbedderProvider?: ("openai" | "ollama" | "gemini") | undefined
 				codebaseIndexEmbedderBaseUrl?: string | undefined
 				codebaseIndexEmbedderModelId?: string | undefined
+				geminiEmbeddingTaskType?: string | undefined
 		  }
 		| undefined
 	alwaysAllowWrite?: boolean | undefined
@@ -349,6 +357,7 @@ type ProviderSettings = {
 	lmStudioSpeculativeDecodingEnabled?: boolean | undefined
 	geminiApiKey?: string | undefined
 	googleGeminiBaseUrl?: string | undefined
+	geminiEmbeddingTaskType?: string | undefined
 	openAiNativeApiKey?: string | undefined
 	openAiNativeBaseUrl?: string | undefined
 	mistralApiKey?: string | undefined
@@ -762,6 +771,7 @@ type IpcMessage =
 								lmStudioSpeculativeDecodingEnabled?: boolean | undefined
 								geminiApiKey?: string | undefined
 								googleGeminiBaseUrl?: string | undefined
+								geminiEmbeddingTaskType?: string | undefined
 								openAiNativeApiKey?: string | undefined
 								openAiNativeBaseUrl?: string | undefined
 								mistralApiKey?: string | undefined
@@ -856,15 +866,23 @@ type IpcMessage =
 														}
 												  }
 												| undefined
+											gemini?:
+												| {
+														[x: string]: {
+															dimension: number
+														}
+												  }
+												| undefined
 									  }
 									| undefined
 								codebaseIndexConfig?:
 									| {
 											codebaseIndexEnabled?: boolean | undefined
 											codebaseIndexQdrantUrl?: string | undefined
-											codebaseIndexEmbedderProvider?: ("openai" | "ollama") | undefined
+											codebaseIndexEmbedderProvider?: ("openai" | "ollama" | "gemini") | undefined
 											codebaseIndexEmbedderBaseUrl?: string | undefined
 											codebaseIndexEmbedderModelId?: string | undefined
+											geminiEmbeddingTaskType?: string | undefined
 									  }
 									| undefined
 								alwaysAllowWrite?: boolean | undefined
@@ -1274,6 +1292,7 @@ type TaskCommand =
 					lmStudioSpeculativeDecodingEnabled?: boolean | undefined
 					geminiApiKey?: string | undefined
 					googleGeminiBaseUrl?: string | undefined
+					geminiEmbeddingTaskType?: string | undefined
 					openAiNativeApiKey?: string | undefined
 					openAiNativeBaseUrl?: string | undefined
 					mistralApiKey?: string | undefined
@@ -1368,15 +1387,23 @@ type TaskCommand =
 											}
 									  }
 									| undefined
+								gemini?:
+									| {
+											[x: string]: {
+												dimension: number
+											}
+									  }
+									| undefined
 						  }
 						| undefined
 					codebaseIndexConfig?:
 						| {
 								codebaseIndexEnabled?: boolean | undefined
 								codebaseIndexQdrantUrl?: string | undefined
-								codebaseIndexEmbedderProvider?: ("openai" | "ollama") | undefined
+								codebaseIndexEmbedderProvider?: ("openai" | "ollama" | "gemini") | undefined
 								codebaseIndexEmbedderBaseUrl?: string | undefined
 								codebaseIndexEmbedderModelId?: string | undefined
+								geminiEmbeddingTaskType?: string | undefined
 						  }
 						| undefined
 					alwaysAllowWrite?: boolean | undefined

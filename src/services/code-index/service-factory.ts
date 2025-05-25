@@ -1,6 +1,7 @@
 import * as vscode from "vscode"
 import { OpenAiEmbedder } from "./embedders/openai"
 import { CodeIndexOllamaEmbedder } from "./embedders/ollama"
+import { CodeIndexGeminiEmbedder } from "./embedders/gemini"
 import { EmbedderProvider, getDefaultModelId, getModelDimension } from "../../shared/embeddingModels"
 import { QdrantVectorStore } from "./vector-store/qdrant-client"
 import { codeParser, DirectoryScanner, FileWatcher } from "./processors"
@@ -31,12 +32,19 @@ export class CodeIndexServiceFactory {
 			if (!config.openAiOptions?.openAiNativeApiKey) {
 				throw new Error("OpenAI configuration missing for embedder creation")
 			}
-			return new OpenAiEmbedder(config.openAiOptions) // Reverted temporarily
+			return new OpenAiEmbedder(config.openAiOptions)
 		} else if (provider === "ollama") {
 			if (!config.ollamaOptions?.ollamaBaseUrl) {
 				throw new Error("Ollama configuration missing for embedder creation")
 			}
-			return new CodeIndexOllamaEmbedder(config.ollamaOptions) // Reverted temporarily
+			return new CodeIndexOllamaEmbedder(config.ollamaOptions)
+		}
+
+		if (provider === "gemini") {
+			if (!config.geminiOptions?.geminiApiKey) {
+				throw new Error("Gemini configuration missing for embedder creation")
+			}
+			return new CodeIndexGeminiEmbedder(config.geminiOptions)
 		}
 
 		throw new Error(`Invalid embedder type configured: ${config.embedderProvider}`)
@@ -50,11 +58,16 @@ export class CodeIndexServiceFactory {
 
 		const provider = config.embedderProvider as EmbedderProvider
 		const defaultModel = getDefaultModelId(provider)
-		// Determine the modelId based on the provider and config, using apiModelId
-		const modelId =
-			provider === "openai"
-				? (config.openAiOptions?.apiModelId ?? defaultModel)
-				: (config.ollamaOptions?.apiModelId ?? defaultModel)
+
+		// Determine the modelId based on the provider and config
+		let modelId = defaultModel
+		if (provider === "openai") {
+			modelId = config.openAiOptions?.apiModelId ?? defaultModel
+		} else if (provider === "ollama") {
+			modelId = config.ollamaOptions?.apiModelId ?? defaultModel
+		} else if (provider === "gemini") {
+			modelId = config.geminiOptions?.apiModelId ?? defaultModel
+		}
 
 		const vectorSize = getModelDimension(provider, modelId)
 
